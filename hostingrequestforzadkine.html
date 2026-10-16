@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zadkine – hosting request</title>
+<style>
+:root {
+  --zadkine-pink: #D60D8C;
+  --zadkine-pink-dark: #B00A74;
+  --zadkine-cyan: #009FC3;
+  --text: #1a1a1a;
+  --bg: #f7f7f7;
+  --white: #ffffff;
+  --border: #e0e0e0;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: #111;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  font-size: 1.05rem;
+}
+header {
+  background: var(--zadkine-pink);
+  color: white;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  position: relative;
+}
+.logo {
+  display: inline-block;
+  background: var(--zadkine-pink);
+  color: white;
+  font-weight: 900;
+  font-size: 2.2rem;
+  letter-spacing: 2px;
+  padding: 0.6rem 1.2rem;
+  border: 4px solid white;
+}
+header h1 {
+  margin: 0.8rem 0 0.3rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+header p { margin: 0; opacity: 0.9; font-size: 0.95rem; }
+.header-controls {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+.btn-admin-header {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 1px solid white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.btn-admin-header:hover { background: rgba(255,255,255,0.3); }
+.container {
+  max-width: 820px;
+  margin: 2rem auto;
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+.lang-selector {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.lang-btn {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--zadkine-pink);
+  background: white;
+  color: var(--zadkine-pink);
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.lang-btn.active {
+  background: var(--zadkine-pink);
+  color: white;
+}
+fieldset {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  padding: 1.2rem 1.4rem;
+}
+legend {
+  font-weight: 700;
+  color: var(--zadkine-pink);
+  padding: 0 0.5rem;
+  font-size: 1.15rem;
+}
+label {
+  display: block;
+  margin: 0.8rem 0 0.35rem;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #111;
+}
+input, select, textarea {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  font-size: 1.05rem;
+  font-family: inherit;
+  transition: border 0.2s;
+  color: #111;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--zadkine-pink);
+  box-shadow: 0 0 0 3px rgba(214,13,140,0.15);
+}
+.row { display: flex; gap: 1rem; flex-wrap: wrap; }
+.row > div { flex: 1; min-width: 200px; }
+.checkbox-group { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; }
+.checkbox-group label { font-weight: 500; display: flex; align-items: center; gap: 0.4rem; margin: 0; }
+.checkbox-group input { width: auto; }
+.buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+button {
+  padding: 0.8rem 1.7rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-primary {
+  background: var(--zadkine-pink);
+  color: white;
+}
+.btn-primary:hover { background: var(--zadkine-pink-dark); }
+.btn-secondary {
+  background: #eee;
+  color: #333;
+}
+.btn-secondary:hover { background: #ddd; }
+.note {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.3rem;
+}
+.admin-panel {
+  background: #fff8fc;
+  border: 1px dashed var(--zadkine-pink);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  display: none;
+}
+.success {
+  background: #e8f5e9;
+  border: 1px solid #4caf50;
+  color: #2e7d32;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  display: none;
+}
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  color: #888;
+  font-size: 0.85rem;
+}
+.designed-by {
+  margin-top: 0.5rem;
+  font-weight: 600;
+  color: var(--zadkine-pink);
+}
+.login-overlay, .content-protected { /* removed - form is public */ }
+  .container { margin: 1rem; padding: 1.2rem; }
+  .row { flex-direction: column; }
+  header h1 { font-size: 1.35rem; }
+  .header-controls { position: static; margin-top: 0.8rem; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-controls">
+    <button class="btn-admin-header" onclick="showAdmin()" data-i18n="admin">Admin Login</button>
+  </div>
+  <div class="logo">ZADKINE</div>
+  <h1 data-i18n="title">hosting request</h1>
+  <p data-i18n="subtitle">For institutions wishing to host staff and/or students at Zadkine</p>
+</header>
+
+<div class="container">
+  <div class="lang-selector">
+    <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">English</button>
+    <button class="lang-btn" data-lang="nl" onclick="setLanguage('nl')">Nederlands</button>
+    <button class="lang-btn" data-lang="fr" onclick="setLanguage('fr')">Français</button>
+    <button class="lang-btn" data-lang="de" onclick="setLanguage('de')">Deutsch</button>
+    <button class="lang-btn" data-lang="es" onclick="setLanguage('es')">Español</button>
+  </div>
+
+  <div id="successMsg" class="success" data-i18n="success">
+    Thank you! Your request has been successfully sent to internationaal@zadkine.nl. We will contact you as soon as possible.
+  </div>
+
+  <form id="aanvraagForm" action="https://formsubmit.co/internationaal@zadkine.nl" method="POST">
+    <input type="hidden" name="_subject" value="New hosting request via Zadkine form">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_next" value="">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="Language" id="hiddenLang" value="English">
+
+    <fieldset>
+      <legend data-i18n="sec1">1. Contact details of requesting institution</legend>
+      <div class="row">
+        <div>
+          <label for="instelling" data-i18n="instelling">Name of institution *</label>
+          <input type="text" id="instelling" name="Institution" required>
+        </div>
+        <div>
+          <label for="land" data-i18n="land">Country *</label>
+          <input type="text" id="land" name="Country" required>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label for="contactpersoon" data-i18n="contactpersoon">Contact person *</label>
+          <input type="text" id="contactpersoon" name="Contact person" required>
+        </div>
+        <div>
+          <label for="functie" data-i18n="functie">Position</label>
+          <input type="text" id="functie" name="Position">
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label for="email" data-i18n="email">Email address *</label>
+          <input type="email" id="email" name="Email" required>
+        </div>
+        <div>
+          <label for="telefoon" data-i18n="telefoon">Phone</label>
+          <input type="tel" id="telefoon" name="Phone">
+        </div>
+      </div>
+      <label for="website" data-i18n="website">Website</label>
+      <input type="url" id="website" name="Website" placeholder="https://">
+    </fieldset>
+
+    <fieldset>
+      <legend data-i18n="sec2">2. The group</legend>
+      <label data-i18n="typeDeelnemers">Type of participants *</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="Type of participants" value="Students"> <span data-i18n="students">Students</span></label>
+        <label><input type="checkbox" name="Type of participants" value="Staff"> <span data-i18n="staff">Staff / teachers</span></label>
+        <label><input type="checkbox" name="Type of participants" value="Mix"> <span data-i18n="mix">Mix</span></label>
+      </div>
+      <div class="row">
+        <div>
+          <label for="aantal" data-i18n="aantal">Number of participants *</label>
+          <input type="number" id="aantal" name="Number of participants" min="1" required>
+        </div>
+        <div>
+          <label for="leeftijd" data-i18n="leeftijd">Age / level (approx.)</label>
+          <input type="text" id="leeftijd" name="Age / level" data-i18n-placeholder="leeftijdPh" placeholder="e.g. 18-25 years, level 4">
+        </div>
+      </div>
+      <label for="taal" data-i18n="taal">Preferred language of the programme</label>
+      <select id="taal" name="Preferred language">
+        <option value="English" data-i18n="langEn">English</option>
+        <option value="Dutch" data-i18n="langNl">Dutch</option>
+        <option value="German" data-i18n="langDe">German</option>
+        <option value="French" data-i18n="langFr">French</option>
+        <option value="Spanish" data-i18n="langEs">Spanish</option>
+        <option value="Other" data-i18n="langOther">Other (please specify)</option>
+      </select>
+    </fieldset>
+
+    <fieldset>
+      <legend data-i18n="sec3">3. Period & duration</legend>
+      <div class="row">
+        <div>
+          <label for="startdatum" data-i18n="startdatum">Desired start date *</label>
+          <input type="date" id="startdatum" name="Start date" required>
+        </div>
+        <div>
+          <label for="einddatum" data-i18n="einddatum">Desired end date *</label>
+          <input type="date" id="einddatum" name="End date" required>
+        </div>
+      </div>
+      <label for="duur" data-i18n="duur">Or: desired duration (if dates are flexible)</label>
+      <input type="text" id="duur" name="Duration" data-i18n-placeholder="duurPh" placeholder="e.g. 1 week, 2 weeks, 1 month">
+      <label for="flexibiliteit" data-i18n="flexibiliteit">Flexibility in dates</label>
+      <textarea id="flexibiliteit" name="Date flexibility" rows="2" data-i18n-placeholder="flexPh" placeholder="E.g. preferably in period X, or open to suggestions"></textarea>
+    </fieldset>
+
+    <fieldset>
+      <legend data-i18n="sec4">4. Desired programme & activities</legend>
+      <label data-i18n="onderdelen">Which components would you like in the programme? (multiple possible)</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="Programme components" value="Lessons / workshops"> <span data-i18n="lessons">Lessons / workshops</span></label>
+        <label><input type="checkbox" name="Programme components" value="Company visits"> <span data-i18n="visits">Company visits</span></label>
+        <label><input type="checkbox" name="Programme components" value="Cultural activities"> <span data-i18n="cultural">Cultural activities</span></label>
+        <label><input type="checkbox" name="Programme components" value="Rotterdam city exploration"> <span data-i18n="city">Rotterdam city exploration</span></label>
+        <label><input type="checkbox" name="Programme components" value="Practical assignments"> <span data-i18n="practical">Practical assignments</span></label>
+        <label><input type="checkbox" name="Programme components" value="Presentations / pitches"> <span data-i18n="presentations">Presentations / pitches</span></label>
+        <label><input type="checkbox" name="Programme components" value="Networking"> <span data-i18n="networking">Networking with students/teachers</span></label>
+        <label><input type="checkbox" name="Programme components" value="Other"> <span data-i18n="other">Other</span></label>
+      </div>
+      <label for="specifiekeWensen" data-i18n="specifiekeWensen">Specific wishes / themes / fields of study</label>
+      <textarea id="specifiekeWensen" name="Specific wishes" rows="3" data-i18n-placeholder="wishesPh" placeholder="E.g. hospitality, healthcare, technology, entrepreneurship, sustainability…"></textarea>
+      <label for="voorkeurCollege" data-i18n="voorkeurCollege">Preferred college / Zadkine location (if known)</label>
+      <input type="text" id="voorkeurCollege" name="Preferred college" data-i18n-placeholder="collegePh" placeholder="E.g. Hospitality College, Benthemplein, etc.">
+    </fieldset>
+
+    <fieldset>
+      <legend data-i18n="sec5">5. Logistics & accommodation</legend>
+      <label for="accommodatie" data-i18n="accommodatie">Accommodation desired?</label>
+      <select id="accommodatie" name="Accommodation">
+        <option value="No, we arrange ourselves" data-i18n="accNo">No, we arrange accommodation ourselves</option>
+        <option value="Yes, help desired" data-i18n="accHelp">Yes, we would like help with accommodation</option>
+        <option value="Yes, Zadkine arranges" data-i18n="accZadkine">Yes, Zadkine arranges accommodation</option>
+        <option value="Not yet known" data-i18n="accUnknown">Not yet known</option>
+      </select>
+      <label for="vervoer" data-i18n="vervoer">Transport / transfers</label>
+      <textarea id="vervoer" name="Transport" rows="2" data-i18n-placeholder="transportPh" placeholder="Needs regarding transport, airport transfers, etc."></textarea>
+      <label for="dieet" data-i18n="dieet">Dietary requirements / allergies / special needs</label>
+      <textarea id="dieet" name="Diet and special needs" rows="2"></textarea>
+    </fieldset>
+
+    <fieldset>
+      <legend data-i18n="sec6">6. Budget</legend>
+      <label for="budget" data-i18n="budget">Available budget for costs (for the organising party) *</label>
+      <input type="text" id="budget" name="Available budget" required data-i18n-placeholder="budgetPh" placeholder="E.g. € 5,000, € 150 per person, or ‘to be determined’">
+      <p class="note" data-i18n="budgetNote">Indicate the budget available for programme, accommodation, transport, meals, etc. This helps us make a suitable proposal.</p>
+      <label for="budgetToelichting" data-i18n="budgetToelichting">Explanation of the budget</label>
+      <textarea id="budgetToelichting" name="Budget explanation" rows="2"></textarea>
+      <label for="subsidie" data-i18n="subsidie">Which subsidy are you using? (if applicable)</label>
+      <select id="subsidie" name="Subsidy">
+        <option value="None / not applicable" data-i18n="subsNone">None / not applicable</option>
+        <option value="Erasmus+" data-i18n="subsErasmus">Erasmus+</option>
+        <option value="Erasmus+ KA1" data-i18n="subsKA1">Erasmus+ KA1</option>
+        <option value="Other EU subsidy" data-i18n="subsEU">Other EU subsidy</option>
+        <option value="National / regional subsidy" data-i18n="subsNational">National / regional subsidy</option>
+        <option value="Own funds" data-i18n="subsOwn">Own funds</option>
+        <option value="Other" data-i18n="subsOther">Other (please specify in comments)</option>
+      </select>
+    </fieldset>
+
+    <fieldset>
+      <legend data-i18n="sec7">7. Other</legend>
+      <label for="doel" data-i18n="doel">Purpose of the visit / what do you want to achieve?</label>
+      <textarea id="doel" name="Purpose of visit" rows="3"></textarea>
+      <label for="extra" data-i18n="extra">Additional comments or questions</label>
+      <textarea id="extra" name="Additional comments" rows="3"></textarea>
+      <label for="hoeGevonden" data-i18n="hoeGevonden">How did you find Zadkine?</label>
+      <input type="text" id="hoeGevonden" name="How found">
+    </fieldset>
+
+    <div class="buttons">
+      <button type="button" class="btn-secondary" onclick="resetForm()" data-i18n="reset">Clear form</button>
+      <button type="button" class="btn-secondary" onclick="downloadPDF()" data-i18n="pdf">Save as PDF</button>
+      <button type="submit" class="btn-primary" data-i18n="send">Send</button>
+    </div>
+  </form>
+
+  <div id="adminPanel" class="admin-panel">
+    <h3 style="margin-top:0; color:var(--zadkine-pink);">Admin – Layout & vormgeving</h3>
+    <p>De design-opties zijn beveiligd. Voer eerst het admin-wachtwoord in.</p>
+    <label for="adminPass">Admin wachtwoord</label>
+    <input type="password" id="adminPass" placeholder="Wachtwoord invoeren">
+    <button type="button" class="btn-primary" style="margin-top:0.5rem;" onclick="checkAdmin()">Bevestigen</button>
+    <div id="adminResult" style="margin-top:0.8rem;"></div>
+    <div id="designControls" style="display:none; margin-top:1.2rem; padding-top:1rem; border-top:1px dashed var(--zadkine-pink);">
+      <h4 style="margin:0 0 0.8rem; color:var(--zadkine-pink);">Layout & vormgeving aanpassen</h4>
+      <p class="note" style="background:#fff3cd; padding:0.6rem; border-radius:6px; color:#856404;">
+        <strong>Let op:</strong> Alleen de onderstaande design-opties zijn hier beschikbaar. Structurele wijzigingen (velden toevoegen/verwijderen, teksten structureel aanpassen, HTML/CSS aanpassen) kunnen alleen door een beheerder in de broncode worden gedaan.
+      </p>
+      <label>Primaire kleur (Zadkine-roze)</label>
+      <input type="color" id="colorPicker" value="#D60D8C" onchange="updateColor(this.value)">
+      <label style="margin-top:0.8rem;">Lettergrootte</label>
+      <input type="range" id="fontSize" min="0.9" max="1.3" step="0.05" value="1.05" oninput="updateFontSize(this.value)">
+      <p class="note">Wijzigingen worden direct toegepast. Vernieuw de pagina om te resetten.</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div data-i18n="footer">Zadkine · International · Rotterdam</div>
+  <div data-i18n="footerNote">This form automatically sends requests to internationaal@zadkine.nl</div>
+  <div class="designed-by">Designed By Martin Huizinga Zadkine©️</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+const translations = {
+  en: {
+    title: "hosting request",
+    subtitle: "For institutions wishing to host staff and/or students at Zadkine",
+    admin: "Admin Login",
+    success: "Thank you! Your request has been successfully sent to internationaal@zadkine.nl. We will contact you as soon as possible.",
+    sec1: "1. Contact details of requesting institution",
+    instelling: "Name of institution *",
+    land: "Country *",
+    contactpersoon: "Contact person *",
+    functie: "Position",
+    email: "Email address *",
+    telefoon: "Phone",
+    website: "Website",
+    sec2: "2. The group",
+    typeDeelnemers: "Type of participants *",
+    students: "Students",
+    staff: "Staff / teachers",
+    mix: "Mix",
+    aantal: "Number of participants *",
+    leeftijd: "Age / level (approx.)",
+    leeftijdPh: "e.g. 18-25 years, level 4",
+    taal: "Preferred language of the programme",
+    langEn: "English", langNl: "Dutch", langDe: "German", langFr: "French", langEs: "Spanish", langOther: "Other (please specify)",
+    sec3: "3. Period & duration",
+    startdatum: "Desired start date *",
+    einddatum: "Desired end date *",
+    duur: "Or: desired duration (if dates are flexible)",
+    duurPh: "e.g. 1 week, 2 weeks, 1 month",
+    flexibiliteit: "Flexibility in dates",
+    flexPh: "E.g. preferably in period X, or open to suggestions",
+    sec4: "4. Desired programme & activities",
+    onderdelen: "Which components would you like in the programme? (multiple possible)",
+    lessons: "Lessons / workshops",
+    visits: "Company visits",
+    cultural: "Cultural activities",
+    city: "Rotterdam city exploration",
+    practical: "Practical assignments",
+    presentations: "Presentations / pitches",
+    networking: "Networking with students/teachers",
+    other: "Other",
+    specifiekeWensen: "Specific wishes / themes / fields of study",
+    wishesPh: "E.g. hospitality, healthcare, technology, entrepreneurship, sustainability…",
+    voorkeurCollege: "Preferred college / Zadkine location (if known)",
+    collegePh: "E.g. Hospitality College, Benthemplein, etc.",
+    sec5: "5. Logistics & accommodation",
+    accommodatie: "Accommodation desired?",
+    accNo: "No, we arrange accommodation ourselves",
+    accHelp: "Yes, we would like help with accommodation",
+    accZadkine: "Yes, Zadkine arranges accommodation",
+    accUnknown: "Not yet known",
+    vervoer: "Transport / transfers",
+    transportPh: "Needs regarding transport, airport transfers, etc.",
+    dieet: "Dietary requirements / allergies / special needs",
+    sec6: "6. Budget",
+    budget: "Available budget for costs (for the organising party) *",
+    budgetPh: "E.g. € 5,000, € 150 per person, or ‘to be determined’",
+    budgetNote: "Indicate the budget available for programme, accommodation, transport, meals, etc. This helps us make a suitable proposal.",
+    budgetToelichting: "Explanation of the budget",
+    subsidie: "Which subsidy are you using? (if applicable)",
+    subsNone: "None / not applicable",
+    subsErasmus: "Erasmus+",
+    subsKA1: "Erasmus+ KA1",
+    subsEU: "Other EU subsidy",
+    subsNational: "National / regional subsidy",
+    subsOwn: "Own funds",
+    subsOther: "Other (please specify in comments)",
+    sec7: "7. Other",
+    doel: "Purpose of the visit / what do you want to achieve?",
+    extra: "Additional comments or questions",
+    hoeGevonden: "How did you find Zadkine?",
+    reset: "Clear form",
+    pdf: "Save as PDF",
+    send: "Send",
+    adminTitle: "Admin security",
+    adminText: "The layout and design of this form is protected. Only with the correct password can changes be made to the source code.",
+    adminPass: "Admin password",
+    adminConfirm: "Confirm",
+    footer: "Zadkine · International · Rotterdam",
+    footerNote: "This form automatically sends requests to internationaal@zadkine.nl"
+  },
+  nl: {
+    title: "hosting request",
+    subtitle: "Voor instellingen die medewerkers en/of studenten willen hosten bij Zadkine",
+    admin: "Admin Login",
+    success: "Bedankt! Je aanvraag is succesvol verzonden naar internationaal@zadkine.nl. We nemen zo snel mogelijk contact met je op.",
+    sec1: "1. Contactgegevens aanvragende instelling",
+    instelling: "Naam instelling *",
+    land: "Land *",
+    contactpersoon: "Contactpersoon *",
+    functie: "Functie",
+    email: "E-mailadres *",
+    telefoon: "Telefoon",
+    website: "Website",
+    sec2: "2. De groep",
+    typeDeelnemers: "Type deelnemers *",
+    students: "Studenten",
+    staff: "Medewerkers / docenten",
+    mix: "Mix",
+    aantal: "Aantal deelnemers *",
+    leeftijd: "Leeftijd / niveau (globaal)",
+    leeftijdPh: "bijv. 18-25 jaar, mbo-4",
+    taal: "Voorkeurstaal programma",
+    langEn: "Engels", langNl: "Nederlands", langDe: "Duits", langFr: "Frans", langEs: "Spaans", langOther: "Anders (toelichten)",
+    sec3: "3. Periode & duur",
+    startdatum: "Gewenste startdatum *",
+    einddatum: "Gewenste einddatum *",
+    duur: "Of: gewenste duur (als data flexibel zijn)",
+    duurPh: "bijv. 1 week, 2 weken, 1 maand",
+    flexibiliteit: "Flexibiliteit in data",
+    flexPh: "Bijv. liever in periode X, of open voor voorstellen",
+    sec4: "4. Gewenst programma & activiteiten",
+    onderdelen: "Welke onderdelen wil je graag in het programma? (meerdere mogelijk)",
+    lessons: "Lessen / workshops",
+    visits: "Bedrijfsbezoeken",
+    cultural: "Culturele activiteiten",
+    city: "Stadsverkenning Rotterdam",
+    practical: "Praktijkopdrachten",
+    presentations: "Presentaties / pitches",
+    networking: "Netwerken met studenten/docenten",
+    other: "Anders",
+    specifiekeWensen: "Specifieke wensen / thema’s / vakgebieden",
+    wishesPh: "Bijv. hospitality, zorg, techniek, ondernemerschap, duurzaamheid…",
+    voorkeurCollege: "Voorkeur college / locatie Zadkine (indien bekend)",
+    collegePh: "Bijv. Hospitality College, Benthemplein, etc.",
+    sec5: "5. Logistiek & accommodatie",
+    accommodatie: "Accommodatie gewenst?",
+    accNo: "Nee, we regelen zelf accommodatie",
+    accHelp: "Ja, graag hulp bij accommodatie",
+    accZadkine: "Ja, Zadkine regelt accommodatie",
+    accUnknown: "Nog niet bekend",
+    vervoer: "Vervoer / transfers",
+    transportPh: "Behoeften rondom vervoer, luchthaven transfers, etc.",
+    dieet: "Dieetwensen / allergieën / speciale behoeften",
+    sec6: "6. Budget",
+    budget: "Beschikbaar budget voor kosten (voor de organiserende partij) *",
+    budgetPh: "Bijv. € 5.000, € 150 per persoon, of ‘nader te bepalen’",
+    budgetNote: "Geef aan welk budget beschikbaar is voor programma, accommodatie, vervoer, maaltijden, etc. Dit helpt ons om een passend voorstel te maken.",
+    budgetToelichting: "Toelichting bij budget",
+    subsidie: "Van welke subsidie maken jullie gebruik? (indien van toepassing)",
+    subsNone: "Geen / niet van toepassing",
+    subsErasmus: "Erasmus+",
+    subsKA1: "Erasmus+ KA1",
+    subsEU: "Andere EU-subsidie",
+    subsNational: "Nationale / regionale subsidie",
+    subsOwn: "Eigen middelen",
+    subsOther: "Anders (toelichten in opmerkingen)",
+    sec7: "7. Overig",
+    doel: "Doel van het bezoek / wat willen jullie bereiken?",
+    extra: "Extra opmerkingen of vragen",
+    hoeGevonden: "Hoe heb je Zadkine gevonden?",
+    reset: "Formulier leegmaken",
+    pdf: "Opslaan als PDF",
+    send: "Verzenden",
+    adminTitle: "Admin-beveiliging",
+    adminText: "De layout en vormgeving van dit formulier is beveiligd. Alleen met het juiste wachtwoord kun je wijzigingen aanbrengen in de broncode.",
+    adminPass: "Admin wachtwoord",
+    adminConfirm: "Bevestigen",
+    footer: "Zadkine · Internationaal · Rotterdam",
+    footerNote: "Dit formulier stuurt aanvragen automatisch door naar internationaal@zadkine.nl"
+  },
+  fr: {
+    title: "hosting request",
+    subtitle: "Pour les institutions souhaitant accueillir du personnel et/ou des étudiants chez Zadkine",
+    admin: "Connexion Admin",
+    success: "Merci ! Votre demande a été envoyée avec succès à internationaal@zadkine.nl. Nous vous contacterons dès que possible.",
+    sec1: "1. Coordonnées de l'institution demandeuse",
+    instelling: "Nom de l'institution *",
+    land: "Pays *",
+    contactpersoon: "Personne de contact *",
+    functie: "Fonction",
+    email: "Adresse e-mail *",
+    telefoon: "Téléphone",
+    website: "Site web",
+    sec2: "2. Le groupe",
+    typeDeelnemers: "Type de participants *",
+    students: "Étudiants",
+    staff: "Personnel / enseignants",
+    mix: "Mixte",
+    aantal: "Nombre de participants *",
+    leeftijd: "Âge / niveau (approx.)",
+    leeftijdPh: "ex. 18-25 ans, niveau 4",
+    taal: "Langue préférée du programme",
+    langEn: "Anglais", langNl: "Néerlandais", langDe: "Allemand", langFr: "Français", langEs: "Espagnol", langOther: "Autre (préciser)",
+    sec3: "3. Période et durée",
+    startdatum: "Date de début souhaitée *",
+    einddatum: "Date de fin souhaitée *",
+    duur: "Ou : durée souhaitée (si les dates sont flexibles)",
+    duurPh: "ex. 1 semaine, 2 semaines, 1 mois",
+    flexibiliteit: "Flexibilité des dates",
+    flexPh: "Ex. de préférence dans la période X, ou ouvert aux suggestions",
+    sec4: "4. Programme et activités souhaités",
+    onderdelen: "Quels éléments souhaitez-vous dans le programme ? (plusieurs possibles)",
+    lessons: "Cours / ateliers",
+    visits: "Visites d'entreprises",
+    cultural: "Activités culturelles",
+    city: "Découverte de Rotterdam",
+    practical: "Devoirs pratiques",
+    presentations: "Présentations / pitches",
+    networking: "Réseautage avec étudiants/enseignants",
+    other: "Autre",
+    specifiekeWensen: "Souhaits spécifiques / thèmes / domaines d'études",
+    wishesPh: "Ex. hospitalité, soins, technologie, entrepreneuriat, durabilité…",
+    voorkeurCollege: "Collège / lieu Zadkine préféré (si connu)",
+    collegePh: "Ex. Hospitality College, Benthemplein, etc.",
+    sec5: "5. Logistique et hébergement",
+    accommodatie: "Hébergement souhaité ?",
+    accNo: "Non, nous organisons nous-mêmes l'hébergement",
+    accHelp: "Oui, nous aimerions de l'aide pour l'hébergement",
+    accZadkine: "Oui, Zadkine organise l'hébergement",
+    accUnknown: "Pas encore connu",
+    vervoer: "Transport / transferts",
+    transportPh: "Besoins concernant le transport, transferts aéroport, etc.",
+    dieet: "Exigences alimentaires / allergies / besoins spéciaux",
+    sec6: "6. Budget",
+    budget: "Budget disponible pour les coûts (pour la partie organisatrice) *",
+    budgetPh: "Ex. 5 000 €, 150 € par personne, ou « à déterminer »",
+    budgetNote: "Indiquez le budget disponible pour le programme, l'hébergement, le transport, les repas, etc. Cela nous aide à faire une proposition adaptée.",
+    budgetToelichting: "Explication du budget",
+    subsidie: "Quelle subvention utilisez-vous ? (le cas échéant)",
+    subsNone: "Aucune / non applicable",
+    subsErasmus: "Erasmus+",
+    subsKA1: "Erasmus+ KA1",
+    subsEU: "Autre subvention UE",
+    subsNational: "Subvention nationale / régionale",
+    subsOwn: "Fonds propres",
+    subsOther: "Autre (préciser dans les commentaires)",
+    sec7: "7. Autre",
+    doel: "Objectif de la visite / que souhaitez-vous atteindre ?",
+    extra: "Commentaires ou questions supplémentaires",
+    hoeGevonden: "Comment avez-vous trouvé Zadkine ?",
+    reset: "Vider le formulaire",
+    pdf: "Enregistrer en PDF",
+    send: "Envoyer",
+    adminTitle: "Sécurité Admin",
+    adminText: "La mise en page et le design de ce formulaire sont protégés. Seul le bon mot de passe permet de modifier le code source.",
+    adminPass: "Mot de passe Admin",
+    adminConfirm: "Confirmer",
+    footer: "Zadkine · International · Rotterdam",
+    footerNote: "Ce formulaire envoie automatiquement les demandes à internationaal@zadkine.nl"
+  },
+  de: {
+    title: "hosting request",
+    subtitle: "Für Institutionen, die Mitarbeiter und/oder Studierende bei Zadkine hosten möchten",
+    admin: "Admin Login",
+    success: "Vielen Dank! Ihre Anfrage wurde erfolgreich an internationaal@zadkine.nl gesendet. Wir werden uns so schnell wie möglich bei Ihnen melden.",
+    sec1: "1. Kontaktdaten der anfragenden Institution",
+    instelling: "Name der Institution *",
+    land: "Land *",
+    contactpersoon: "Ansprechpartner *",
+    functie: "Position",
+    email: "E-Mail-Adresse *",
+    telefoon: "Telefon",
+    website: "Website",
+    sec2: "2. Die Gruppe",
+    typeDeelnemers: "Art der Teilnehmer *",
+    students: "Studierende",
+    staff: "Mitarbeiter / Lehrkräfte",
+    mix: "Mix",
+    aantal: "Anzahl der Teilnehmer *",
+    leeftijd: "Alter / Niveau (ca.)",
+    leeftijdPh: "z.B. 18-25 Jahre, Niveau 4",
+    taal: "Bevorzugte Programmsprache",
+    langEn: "Englisch", langNl: "Niederländisch", langDe: "Deutsch", langFr: "Französisch", langEs: "Spanisch", langOther: "Andere (bitte angeben)",
+    sec3: "3. Zeitraum & Dauer",
+    startdatum: "Gewünschtes Startdatum *",
+    einddatum: "Gewünschtes Enddatum *",
+    duur: "Oder: gewünschte Dauer (wenn Daten flexibel sind)",
+    duurPh: "z.B. 1 Woche, 2 Wochen, 1 Monat",
+    flexibiliteit: "Flexibilität bei den Daten",
+    flexPh: "Z.B. bevorzugt in Zeitraum X, oder offen für Vorschläge",
+    sec4: "4. Gewünschtes Programm & Aktivitäten",
+    onderdelen: "Welche Bestandteile möchten Sie im Programm? (mehrere möglich)",
+    lessons: "Unterricht / Workshops",
+    visits: "Firmenbesuche",
+    cultural: "Kulturelle Aktivitäten",
+    city: "Stadterkundung Rotterdam",
+    practical: "Praktische Aufgaben",
+    presentations: "Präsentationen / Pitches",
+    networking: "Netzwerken mit Studierenden/Lehrern",
+    other: "Andere",
+    specifiekeWensen: "Spezifische Wünsche / Themen / Fachbereiche",
+    wishesPh: "Z.B. Hospitality, Pflege, Technik, Unternehmertum, Nachhaltigkeit…",
+    voorkeurCollege: "Bevorzugtes College / Zadkine-Standort (falls bekannt)",
+    collegePh: "Z.B. Hospitality College, Benthemplein, etc.",
+    sec5: "5. Logistik & Unterkunft",
+    accommodatie: "Unterkunft gewünscht?",
+    accNo: "Nein, wir organisieren die Unterkunft selbst",
+    accHelp: "Ja, wir möchten Hilfe bei der Unterkunft",
+    accZadkine: "Ja, Zadkine organisiert die Unterkunft",
+    accUnknown: "Noch nicht bekannt",
+    vervoer: "Transport / Transfers",
+    transportPh: "Bedürfnisse bezüglich Transport, Flughafentransfers usw.",
+    dieet: "Ernährungsanforderungen / Allergien / besondere Bedürfnisse",
+    sec6: "6. Budget",
+    budget: "Verfügbares Budget für Kosten (für die organisierende Partei) *",
+    budgetPh: "Z.B. 5.000 €, 150 € pro Person oder „noch festzulegen“",
+    budgetNote: "Geben Sie das verfügbare Budget für Programm, Unterkunft, Transport, Mahlzeiten usw. an. Dies hilft uns, ein passendes Angebot zu erstellen.",
+    budgetToelichting: "Erläuterung zum Budget",
+    subsidie: "Welche Förderung nutzen Sie? (falls zutreffend)",
+    subsNone: "Keine / nicht zutreffend",
+    subsErasmus: "Erasmus+",
+    subsKA1: "Erasmus+ KA1",
+    subsEU: "Andere EU-Förderung",
+    subsNational: "Nationale / regionale Förderung",
+    subsOwn: "Eigene Mittel",
+    subsOther: "Andere (bitte in den Anmerkungen angeben)",
+    sec7: "7. Sonstiges",
+    doel: "Zweck des Besuchs / was möchten Sie erreichen?",
+    extra: "Zusätzliche Anmerkungen oder Fragen",
+    hoeGevonden: "Wie haben Sie Zadkine gefunden?",
+    reset: "Formular leeren",
+    pdf: "Als PDF speichern",
+    send: "Senden",
+    adminTitle: "Admin-Sicherheit",
+    adminText: "Layout und Design dieses Formulars sind geschützt. Nur mit dem richtigen Passwort können Änderungen am Quellcode vorgenommen werden.",
+    adminPass: "Admin-Passwort",
+    adminConfirm: "Bestätigen",
+    footer: "Zadkine · International · Rotterdam",
+    footerNote: "Dieses Formular sendet Anfragen automatisch an internationaal@zadkine.nl"
+  },
+  es: {
+    title: "hosting request",
+    subtitle: "Para instituciones que deseen acoger personal y/o estudiantes en Zadkine",
+    admin: "Inicio de sesión Admin",
+    success: "¡Gracias! Su solicitud se ha enviado correctamente a internationaal@zadkine.nl. Nos pondremos en contacto con usted lo antes posible.",
+    sec1: "1. Datos de contacto de la institución solicitante",
+    instelling: "Nombre de la institución *",
+    land: "País *",
+    contactpersoon: "Persona de contacto *",
+    functie: "Cargo",
+    email: "Dirección de correo electrónico *",
+    telefoon: "Teléfono",
+    website: "Sitio web",
+    sec2: "2. El grupo",
+    typeDeelnemers: "Tipo de participantes *",
+    students: "Estudiantes",
+    staff: "Personal / profesores",
+    mix: "Mixto",
+    aantal: "Número de participantes *",
+    leeftijd: "Edad / nivel (aprox.)",
+    leeftijdPh: "p.ej. 18-25 años, nivel 4",
+    taal: "Idioma preferido del programa",
+    langEn: "Inglés", langNl: "Neerlandés", langDe: "Alemán", langFr: "Francés", langEs: "Español", langOther: "Otro (especificar)",
+    sec3: "3. Período y duración",
+    startdatum: "Fecha de inicio deseada *",
+    einddatum: "Fecha de finalización deseada *",
+    duur: "O: duración deseada (si las fechas son flexibles)",
+    duurPh: "p.ej. 1 semana, 2 semanas, 1 mes",
+    flexibiliteit: "Flexibilidad en las fechas",
+    flexPh: "P.ej. preferiblemente en el período X, o abierto a sugerencias",
+    sec4: "4. Programa y actividades deseados",
+    onderdelen: "¿Qué componentes le gustaría en el programa? (varios posibles)",
+    lessons: "Lecciones / talleres",
+    visits: "Visitas a empresas",
+    cultural: "Actividades culturales",
+    city: "Exploración de la ciudad de Róterdam",
+    practical: "Tareas prácticas",
+    presentations: "Presentaciones / pitches",
+    networking: "Networking con estudiantes/profesores",
+    other: "Otro",
+    specifiekeWensen: "Deseos específicos / temas / áreas de estudio",
+    wishesPh: "P.ej. hospitalidad, salud, tecnología, emprendimiento, sostenibilidad…",
+    voorkeurCollege: "Colegio / ubicación de Zadkine preferida (si se conoce)",
+    collegePh: "P.ej. Hospitality College, Benthemplein, etc.",
+    sec5: "5. Logística y alojamiento",
+    accommodatie: "¿Alojamiento deseado?",
+    accNo: "No, organizamos el alojamiento nosotros mismos",
+    accHelp: "Sí, nos gustaría ayuda con el alojamiento",
+    accZadkine: "Sí, Zadkine organiza el alojamiento",
+    accUnknown: "Aún no se sabe",
+    vervoer: "Transporte / traslados",
+    transportPh: "Necesidades respecto al transporte, traslados al aeropuerto, etc.",
+    dieet: "Requisitos dietéticos / alergias / necesidades especiales",
+    sec6: "6. Presupuesto",
+    budget: "Presupuesto disponible para costes (para la parte organizadora) *",
+    budgetPh: "P.ej. 5.000 €, 150 € por persona, o «por determinar»",
+    budgetNote: "Indique el presupuesto disponible para el programa, alojamiento, transporte, comidas, etc. Esto nos ayuda a hacer una propuesta adecuada.",
+    budgetToelichting: "Explicación del presupuesto",
+    subsidie: "¿Qué subvención están utilizando? (si aplica)",
+    subsNone: "Ninguna / no aplica",
+    subsErasmus: "Erasmus+",
+    subsKA1: "Erasmus+ KA1",
+    subsEU: "Otra subvención de la UE",
+    subsNational: "Subvención nacional / regional",
+    subsOwn: "Fondos propios",
+    subsOther: "Otro (especificar en los comentarios)",
+    sec7: "7. Otros",
+    doel: "Objetivo de la visita / ¿qué quieren lograr?",
+    extra: "Comentarios o preguntas adicionales",
+    hoeGevonden: "¿Cómo encontró Zadkine?",
+    reset: "Vaciar formulario",
+    pdf: "Guardar como PDF",
+    send: "Enviar",
+    adminTitle: "Seguridad de Admin",
+    adminText: "El diseño y la apariencia de este formulario están protegidos. Solo con la contraseña correcta se pueden realizar cambios en el código fuente.",
+    adminPass: "Contraseña de Admin",
+    adminConfirm: "Confirmar",
+    footer: "Zadkine · Internacional · Róterdam",
+    footerNote: "Este formulario envía automáticamente las solicitudes a internationaal@zadkine.nl"
+  }
+};
+
+let currentLang = 'en';
+
+function setLanguage(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  document.getElementById('hiddenLang').value = lang.toUpperCase();
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (translations[lang][key]) {
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        // placeholders handled separately
+      } else {
+        el.textContent = translations[lang][key];
+      }
+    }
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (translations[lang][key]) {
+      el.placeholder = translations[lang][key];
+    }
+  });
+  // Update select options text
+  document.querySelectorAll('option[data-i18n]').forEach(opt => {
+    const key = opt.getAttribute('data-i18n');
+    if (translations[lang][key]) opt.textContent = translations[lang][key];
+  });
+}
+
+function resetForm() {
+  if (confirm(currentLang === 'nl' ? 'Weet je zeker dat je het hele formulier wilt leegmaken?' : 'Are you sure you want to clear the entire form?')) {
+    document.getElementById('aanvraagForm').reset();
+    document.getElementById('successMsg').style.display = 'none';
+  }
+}
+
+function showAdmin() {
+  const panel = document.getElementById('adminPanel');
+  panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+  if (panel.style.display === 'block') panel.scrollIntoView({behavior: 'smooth'});
+}
+
+// Form is freely accessible. Admin panel remains protected.
+function checkAdmin() {
+  const pass = document.getElementById('adminPass').value;
+  const result = document.getElementById('adminResult');
+  const controls = document.getElementById('designControls');
+  if (pass === 'J3zu5Chr!stu5') {
+    result.innerHTML = '<strong style="color:green;">Toegang verleend.</strong> Design-opties zijn nu beschikbaar. Structurele wijzigingen blijven alleen mogelijk via de broncode.';
+    controls.style.display = 'block';
+  } else {
+    result.innerHTML = '<strong style="color:red;">Onjuist wachtwoord.</strong>';
+    controls.style.display = 'none';
+  }
+}
+
+function updateColor(hex) {
+  document.documentElement.style.setProperty('--zadkine-pink', hex);
+  document.documentElement.style.setProperty('--zadkine-pink-dark', hex);
+}
+
+function updateFontSize(size) {
+  document.body.style.fontSize = size + 'rem';
+}
+
+function downloadPDF() {
+  const element = document.getElementById('aanvraagForm');
+  const opt = {
+    margin: 10,
+    filename: 'Zadkine-hosting-request.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  // Temporarily hide buttons for cleaner PDF
+  const buttons = document.querySelector('.buttons');
+  const originalDisplay = buttons.style.display;
+  buttons.style.display = 'none';
+  html2pdf().set(opt).from(element).save().then(() => {
+    buttons.style.display = originalDisplay;
+  });
+}
+
+// Initialize English
+setLanguage('en');
+</script>
+</body>
+</html>
